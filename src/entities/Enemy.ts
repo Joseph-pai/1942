@@ -1,10 +1,5 @@
-// Enemy Entity
-export type EnemyType = 'BASIC' | 'ZIGZAG' | 'FAST';
-export const EType: { [key: string]: EnemyType } = {
-    BASIC: 'BASIC',
-    ZIGZAG: 'ZIGZAG',
-    FAST: 'FAST'
-};
+export type EnemyType = 'BASIC_0' | 'BASIC_1' | 'BASIC_2' | 'BASIC_3' | 'BASIC_4' | 'ZIGZAG_5' | 'ZIGZAG_6' | 'ZIGZAG_7' | 'FAST_8' | 'FAST_9';
+import { PlanePainter } from "../engine/PlanePainter";
 
 export class Enemy {
     public x: number;
@@ -29,17 +24,13 @@ export class Enemy {
     public update(dt: number) {
         this.timer += dt;
 
-        switch (this.type) {
-            case EType.BASIC:
-                this.y += this.speed * dt;
-                break;
-            case EType.ZIGZAG:
-                this.y += this.speed * dt;
-                this.x += Math.sin(this.timer * 4) * 100 * dt;
-                break;
-            case EType.FAST:
-                this.y += this.speed * 1.5 * dt;
-                break;
+        if (this.type.startsWith('ZIGZAG')) {
+            this.y += this.speed * dt;
+            this.x += Math.sin(this.timer * 4) * 100 * dt;
+        } else if (this.type.startsWith('FAST')) {
+            this.y += this.speed * 1.5 * dt;
+        } else {
+            this.y += this.speed * dt;
         }
 
         if (this.y > this.ctx.canvas.height + this.height) {
@@ -48,10 +39,7 @@ export class Enemy {
     }
 
     public render() {
-        this.ctx.fillStyle = '#0f0';
-        if (this.type === EType.ZIGZAG) this.ctx.fillStyle = '#ff0';
-        if (this.type === EType.FAST) this.ctx.fillStyle = '#0ff';
-
-        this.ctx.fillRect(this.x - this.width / 2, this.y - this.height / 2, this.width, this.height);
+        const typeIndex = parseInt(this.type.split('_')[1]);
+        PlanePainter.drawEnemy(this.ctx, this.x, this.y, this.width, this.height, typeIndex);
     }
 }

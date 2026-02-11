@@ -1,0 +1,23 @@
+{
+    "name": "1942 Retro Strike",
+    "short_name": "1942",
+    "description": "WWII Retro Shooting Game",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#001",
+    "theme_color": "#eb4d4b",
+    "icons": [
+        {
+            "src": "icon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        },
+        {
+            "src": "icon.svg",
+            "sizes": "512x512",
+            "type": "image/svg+xml",
+            "purpose": "maskable"
+        }
+    ]
+}

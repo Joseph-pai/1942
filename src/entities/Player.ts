@@ -1,4 +1,6 @@
 import { Bullet } from "./Bullet";
+import { PlanePainter } from "../engine/PlanePainter";
+import { AudioManager } from "../engine/AudioManager";
 
 export class Player {
     public x: number;
@@ -38,6 +40,7 @@ export class Player {
         this.shootTimer += dt;
         if (this.shootTimer >= this.shootCooldown) {
             this.shoot(bullets);
+            AudioManager.playShoot();
             this.shootTimer = 0;
         }
 
@@ -53,21 +56,6 @@ export class Player {
     }
 
     public render() {
-        this.ctx.save();
-        this.ctx.fillStyle = '#f00';
-        this.ctx.translate(this.x, this.y);
-
-        // Body
-        this.ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
-
-        // Wings
-        this.ctx.fillStyle = '#800';
-        this.ctx.fillRect(-this.width / 1, -this.height / 8, this.width * 2, this.height / 4);
-
-        // Nose
-        this.ctx.fillStyle = '#fff';
-        this.ctx.fillRect(-this.width / 4, -this.height / 1.5, this.width / 2, this.height / 4);
-
-        this.ctx.restore();
+        PlanePainter.drawPlayer(this.ctx, this.x, this.y, this.width, this.height);
     }
 }

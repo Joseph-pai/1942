@@ -1,8 +1,10 @@
 import { Player } from "../entities/Player";
 import { InputHandler } from "./InputHandler";
 import { Bullet } from "../entities/Bullet";
-import { Enemy, EType } from "../entities/Enemy";
+import { Enemy } from "../entities/Enemy";
+import type { EnemyType } from "../entities/Enemy";
 import { checkCollision } from "./CollisionSystem";
+import { AudioManager } from "./AudioManager";
 
 // Game Engine
 export type GameState = 'MENU' | 'PLAYING' | 'GAMEOVER' | 'PAUSED';
@@ -86,6 +88,7 @@ export class GameEngine {
                         bullet.active = false;
                         enemy.active = false;
                         this.score += 10 * this.difficulty;
+                        AudioManager.playExplosion();
                         break;
                     }
                 }
@@ -148,16 +151,18 @@ export class GameEngine {
     private spawnEnemy() {
         const { width } = this.ctx.canvas;
         const x = Math.random() * (width - 40) + 20;
-
-        // Dynamic speed based on difficulty (100 to 300)
         const speed = 100 + (this.difficulty * 25);
 
-        let type = EType.BASIC;
-        const rand = Math.random();
+        // Pick one of 10 types based on difficulty and randomness
+        const totalTypes = 10;
+        let maxTypeIndex = Math.min(totalTypes, 2 + this.difficulty); // Unlock more types as level increases
+        let typeIndex = Math.floor(Math.random() * maxTypeIndex);
 
-        // More complex enemies appear at higher difficulties
-        if (this.difficulty >= 3 && rand > 0.7) type = EType.ZIGZAG;
-        if (this.difficulty >= 7 && rand > 0.85) type = EType.FAST;
+        // Map index to type string
+        let type: EnemyType = 'BASIC_0';
+        if (typeIndex >= 8) type = `FAST_${typeIndex}` as EnemyType;
+        else if (typeIndex >= 5) type = `ZIGZAG_${typeIndex}` as EnemyType;
+        else type = `BASIC_${typeIndex}` as EnemyType;
 
         this.enemies.push(new Enemy(this.ctx, x, -50, speed, type));
     }
