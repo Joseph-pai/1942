@@ -58,4 +58,10 @@ export class Player {
     public render() {
         PlanePainter.drawPlayer(this.ctx, this.x, this.y, this.width, this.height);
     }
+
+    public reset() {
+        this.x = this.ctx.canvas.width / 2;
+        this.y = this.ctx.canvas.height - 100;
+        this.shootTimer = 0;
+    }
 }
